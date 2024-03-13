@@ -1,0 +1,10 @@
+<h1>Random Fact about Pi</h1>
+
+{% if random_fact %}
+<p>{{ random_fact }}</p>
+{% else %}
+<p>No Fact available.</p>
+{% endif %}
+
+
+<a href="{% url 'core:home' %}">Back to Home</a>
