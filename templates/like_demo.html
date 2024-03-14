@@ -1,0 +1,38 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Like Demo</title>
+</head>
+
+<body>
+  <h1>Like Counter: <span id="like-counter">{{ likes_count.likes }}</span></h1>
+  <button id="like-btn">Like</button>
+
+  <script>
+    document.getElementById('like-btn').addEventListener('click', function () {
+      fetch('{% url "likes:like" %}', {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+        },
+      })
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error('Failed to like');
+          }
+        })
+        .then(data => {
+          document.getElementById('like-counter').textContent = data.likes;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    });
+  </script>
+</body>
+
+</html>
