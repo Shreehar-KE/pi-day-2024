@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PI Digit Guessing Game</title>
+    <style>
+        /* Styles for both pages */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+}
+
+ul {
+    list-style-type: none;
+}
+
+button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+/* Styles specific to game page */
+.game-container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+#numpad {
+    display: grid;
+    grid-template-columns: repeat(3, 50px);
+    grid-gap: 5px;
+    margin: 20px auto;
+}
+
+#numpad button {
+    padding: 20px;
+    font-size: 20px;
+}
+
+/* Modal styles */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4); 
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; 
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; 
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+    </style>
+    
+</head>
+<body>
+    <div class="game-container">
+        <h1>PI Digit Guessing Game</h1>
+        <div id="lifelines">Lifelines: 3</div>
+        <div id="timer">Time left: 60s</div>
+        <div id="digits-entered">Digits entered:</div>
+        <div id="numpad">
+            <!-- Numpad will be dynamically generated here using JavaScript -->
+        </div>
+    </div>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Enter Your Name</h2>
+            <input type="text" id="playerName" placeholder="Your Name">
+            <button onclick="submitName()">Submit</button>
+        </div>
+    </div>
+
+    <script>
+        // Constants
+        const piDigits = Math.PI.toString().slice(2); // Get first 15 digits of PI
+        const gameDuration = 60; // in seconds
+        const scrambleThreshold = 10;
+        const lifelines = 3;
+
+        // Variables
+        let timer;
+        let timeLeft;
+        let digitsEntered = '';
+        let scrambledNumpad = false;
+        let remainingLifelines = lifelines;
+
+        // Function to start the game
+        function startGame() {
+            window.location.href = 'game.html';
+        }
+
+        // Function to display numpad on game page
+        function displayNumpad() {
+            const numpadContainer = document.getElementById('numpad');
+            numpadContainer.innerHTML = '';
+            for (let i = 1; i <= 9; i++) {
+                const button = document.createElement('button');
+                button.textContent = i;
+                button.addEventListener('click', () => enterDigit(i));
+                numpadContainer.appendChild(button);
+            }
+        }
+
+        // Function to enter a digit
+        function enterDigit(digit) {
+            digitsEntered += digit;
+            document.getElementById('digits-entered').textContent = `Digits entered: ${digitsEntered}`;
+            if (digitsEntered.length >= scrambleThreshold) {
+                scrambleNumpad();
+            }
+            if (digitsEntered === piDigits) {
+                endGame(true);
+            }
+        }
+
+        // Function to scramble the numpad
+        function scrambleNumpad() {
+            if (!scrambledNumpad) {
+                const numpadContainer = document.getElementById('numpad');
+                const buttons = Array.from(numpadContainer.getElementsByTagName('button'));
+                buttons.sort(() => Math.random() - 0.5);
+                numpadContainer.innerHTML = '';
+                buttons.forEach(button => numpadContainer.appendChild(button));
+                scrambledNumpad = true;
+            }
+        }
+
+        // Function to start the timer
+        function startTimer() {
+            timeLeft = gameDuration;
+            timer = setInterval(updateTimer, 1000);
+        }
+
+        // Function to update the timer
+        function updateTimer() {
+            timeLeft--;
+            document.getElementById('timer').textContent = `Time left: ${timeLeft}s`;
+            if (timeLeft === 0) {
+                endGame(false);
+            }
+        }
+
+        // Function to end the game
+        function endGame(won) {
+            clearInterval(timer);
+            if (won) {
+                alert(`Congratulations! You entered all digits of PI within the time limit.`);
+            } else {
+                alert(`Time's up! Better luck next time.`);
+            }
+            window.location.href = 'index.html';
+        }
+
+        // Function to display modal for entering player's name
+        function displayModal() {
+            const modal = document.getElementById('myModal');
+            modal.style.display = 'block';
+        }
+
+        // Function to submit player's name
+        function submitName() {
+            const playerName = document.getElementById('playerName').value;
+            alert(`Welcome, ${playerName}! Get ready to start the game.`);
+            startTimer();
+            displayNumpad();
+            displayModal();
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('myModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Close modal when clicking the close button
+        document.getElementsByClassName('close')[0].onclick = function() {
+            const modal = document.getElementById('myModal');
+            modal.style.display = 'none';
+        }
+
+        // Initial setup on page load
+        window.onload = function() {
+            displayNumpad();
+        }
+    </script>
+</body>
+</html>
+
+</body>
+</html>
