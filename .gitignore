@@ -1,0 +1,7 @@
+. env
+. gitignore
+—Pycache /
+/venv
+. pytest_cache
+. venv
+*. sq1ite3
