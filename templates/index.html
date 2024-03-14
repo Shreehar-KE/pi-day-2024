@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block page_header %}
+<div class="p-3 mb-4 bg-light border rounded-3">
+  <div class="container-fluid py-4">
+    <h1 class="display-6">International Pi Day - 14 March, 2024</h1>
+
+    <p class="lead" style="text-align: justify;">This website is made to celebrate the International Pi Day!. Want to
+      find out how much do you know about the most famous mathematical constant? Click the any of the buttons below to
+      start your quest!</p>
+
+    <a class="btn btn-primary btn-lg mt-1" href="">Pi Game</a>
+    <a class="btn btn-primary btn-lg mt-1" href="{% url 'facts:fact' %}">Pi Facts</a>
+    <a class="btn btn-primary btn-lg mt-1" href="#">Pi Jokes</a>
+    <button id="like-btn" class="btn btn-primary btn-lg mt-1" href="#">Like:
+      <span id="like-counter">{{ likes_count.likes }}</span>
+    </button>
+    <script>
+      document.getElementById('like-btn').addEventListener('click', function () {
+        fetch('{% url "likes:like" %}', {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+          },
+        })
+          .then(response => {
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw new Error('Failed to like');
+            }
+          })
+          .then(data => {
+            document.getElementById('like-counter').textContent = data.likes;
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      });
+    </script>
+  </div>
+</div>
+{% endblock page_header %}
+<!-- 
+{% block content %}
+{% if recent_posts %}
+<div class="py-1 mb-2 ">
+  <h4>Recently added posts:</h4>
+</div>
+
+{% for post in recent_posts %}
+<div class="card mb-3">
+  <!-- Card header with timestamp and edit link -->
+<h6 class="card-header pb-2 pt-3">
+  <a href="{% url 'blogs:blog' post.blog.id %}">{{post.blog.name}}</a> - {{ post.title}} |
+  <small><i>{{ post.date_added|date:'M d, Y - H:i' }}</i></small>
+</h6>
+<!-- Card body with entry text -->
+<div class="card-body pb-1" style="text-align: justify;">
+  {{ post.content|truncatewords:50|linebreaks }}
+  <b>by {{post.blog.owner}}</b>
+</div>
+
+</div>
+{% endfor %}
+{% endif %}
+
+{% endblock content %} -->

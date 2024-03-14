@@ -1,10 +1,17 @@
-<h1>Random Fact about Pi</h1>
-
+{% extends 'base.html' %}
+{% block content %}
 {% if random_fact %}
-<p>{{ random_fact }}</p>
+<div class="card mb-3">
+  <!-- Card header -->
+  <h4 class="card-header pb-0 pt-3">
+    <p>Random Fact about Pi</p>
+  </h4>
+  <!-- Card body with fact -->
+  <div class="card-body pb-1" style="text-align: justify;">
+    {{ random_fact|linebreaks }}
+  </div>
+</div>
 {% else %}
 <p>No Fact available.</p>
 {% endif %}
-
-
-<a href="{% url 'core:home' %}">Back to Home</a>
+{% endblock content %}
